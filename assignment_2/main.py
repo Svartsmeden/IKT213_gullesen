@@ -130,29 +130,28 @@ def copy_manual(image):
     return copied_rgb
 
 
-def hue_shifted(image, hue):
+def hue_shifted(image, emptyPictureArray, hue):
 
     height, width, channels = image.shape
-    emptyPictureArray = np.zeros((height, width, channels), dtype=np.uint8)
 
     for y in range(height):
         for x in range(width):
             for c in range(channels):
-                hueValue = int(image[y, x, c]) + int(hue)
-                if hueValue > 255:
-                    hueValue -= 255
-                elif hueValue < 0:
-                    hueValue += 255
-                emptyPictureArray[y, x, c] = hueValue
-    hueShift_rgb = cv2.cvtColor(emptyPictureArray, cv2.COLOR_BGR2RGB)
+                for c in range(channels):
+                    emptyPictureArray[y, x, c] = (int(image[y, x, c]) + int(hue)) % 256
+
+    hueShift = emptyPictureArray                
+    hueShift_rgb = cv2.cvtColor(hueShift, cv2.COLOR_BGR2RGB)
+
+
 
     plt.imshow(hueShift_rgb)
     plt.title("HueShift")
     plt.axis("off")
     plt.show()
-    cv2.imwrite("solutions/lena_hueShift.png", hueShift_rgb)
+    cv2.imwrite("solutions/lena_hueShift.png", hueShift)
 
-    return hueShift_rgb
+    return hueShift
 
 
 
@@ -296,7 +295,9 @@ while True:
                 hueShift = int(input("Enter hue shift value: ").strip())
             except:
                 print("Must enter an integer")
-            hue_shifted(img, hueShift)
+            h, w, c = img.shape
+            emptyPictureArray = np.zeros((h, w, c), dtype=np.uint8)
+            hue_shifted(img, emptyPictureArray, hueShift)
 
 
     elif choice == "0":
