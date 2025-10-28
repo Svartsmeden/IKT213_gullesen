@@ -1,0 +1,5 @@
+I have extended my program from the previous labs to include the new functions from lab 4.
+
+on the SIFT assignment, when having max features = 10, I get no matches.
+When changing it to 0 (unlimited), I get a lot of matches (which seems to be more correct?)
+
